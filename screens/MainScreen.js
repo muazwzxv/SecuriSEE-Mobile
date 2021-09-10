@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
-export default function HomeScreen({ navigation }) {
+export default function MainScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text>HomeScreen</Text>
+      <Text>MainScreen</Text>
       <View styles={styles.row}>
         <View>
           <Button title="Login" onPress={()=> {
