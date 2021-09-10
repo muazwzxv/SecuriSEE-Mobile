@@ -29,7 +29,9 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.row}>
         <Text>Forgot Password</Text>
       </View>
-      <Button title="Login"></Button>
+      <Button title="Login" onPress={()=> {
+        navigation.navigate('Container')
+      }}></Button>
       <StatusBar style="auto" />
     </View>
   );
