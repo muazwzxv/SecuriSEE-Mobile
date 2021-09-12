@@ -4,26 +4,18 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 
 //import components
 import {Loading} from '../components/Index';
-import Auth from './Auth';
+import Login from './LoginScreen';
 import Registration from './RegisterScreeen';
-import Home from './user/HomeScreen';
-
-
 
 export default function MainScreen({ navigation }) {
 
-  const [jwt,setJwt] = useState('');
+    const [showLogin, setShowLogin] = useState(false);
 
-  //set a new jwt
-  const newJWT = (JWT) => {
-    setJwt(JWT);
-  }
-
-  if(jwt === '') {
-    return(<Registration newJWT={newJWT}/>);
-  } else {
-    return(<Home />);
-  }
+    if(!showLogin) {
+        return(<Registration/>);
+    }else {
+        return(<Login />);
+    }
 }
 
 const styles = StyleSheet.create({

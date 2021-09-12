@@ -1,9 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import axios from 'axios';
 
-export default function RegisterScreen() {
- 
+//import components 
+import deviceStorage from '../services/deviceStorage';
+
+export default function RegisterScreen(props) {
+
   //set the state
   const [fname,setFname] = useState('');
   const [lname,setLname] = useState('');
@@ -11,6 +15,26 @@ export default function RegisterScreen() {
   const [email,setEmail] = useState('');
   const [phone,setPhone] = useState(0);
   const [password,setPassword] = useState('');
+
+  //register a user
+  const registerUser = () => {
+    axios({
+      method: 'post',
+      url: 'url',
+      data: {
+        firstname: fname,
+        lastname: lname,
+        icnumber: IC,
+        emailAddress: email,
+        phoneNo: phone,
+        password: password
+      }
+    })
+    .then((response) => {
+      deviceStorage.saveItem(response.data.jwt);
+      props.newJWT('hello');
+    })
+  }
 
   return (
     <View style={styles.container}>
@@ -58,7 +82,7 @@ export default function RegisterScreen() {
           onChangeText={(text) => {setPassword(text)}}
         />
       </View>
-      <Button title="Register"></Button>
+      <Button title="Register" onPress={registerUser}/>
       <StatusBar style="auto" />
     </View>
   );
