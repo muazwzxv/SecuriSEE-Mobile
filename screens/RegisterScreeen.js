@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button} from 'react-native';
 import axios from 'axios';
 
 //import components 
@@ -9,30 +9,30 @@ import deviceStorage from '../services/deviceStorage';
 export default function RegisterScreen(props) {
 
   //set the state
-  const [fname,setFname] = useState('');
-  const [lname,setLname] = useState('');
-  const [IC,setIC] = useState(0);
-  const [email,setEmail] = useState('');
-  const [phone,setPhone] = useState(0);
-  const [password,setPassword] = useState('');
+  const [names,setName] = useState('');
+  const [IC,setIC] = useState('');
+  const [emailadd,setEmail] = useState('');
+  const [phone,setPhone] = useState('');
+  const [passwords,setPassword] = useState('');
 
   //register a user
   const registerUser = () => {
     axios({
       method: 'post',
-      url: 'url',
+      url: 'http://0c96-2001-d08-d8-be8e-403a-2e07-68f4-5189.ngrok.io/api/user',
       data: {
-        firstname: fname,
-        lastname: lname,
-        icnumber: IC,
-        emailAddress: email,
-        phoneNo: phone,
-        password: password
+        name: names,
+        ic: IC,
+        email: emailadd,
+        phone: phone,
+        password: passwords
       }
     })
     .then((response) => {
-      deviceStorage.saveItem(response.data.jwt);
-      props.newJWT('hello');
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err);
     })
   }
 
@@ -42,15 +42,8 @@ export default function RegisterScreen(props) {
       <View>
         <TextInput 
           style={styles.input} 
-          placeholder="First Name" 
-          onChangeText={(text) => {setIC(text)}}
-        />
-      </View>
-      <View>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Last Name" 
-          onChangeText={(text) => {setIC(text)}}
+          placeholder="Name" 
+          onChangeText={(text) => {setName(text)}}
         />
       </View>
       <View>
@@ -64,14 +57,14 @@ export default function RegisterScreen(props) {
         <TextInput 
           style={styles.input} 
           placeholder="Email" 
-          onChangeText={(text) => {setIC(text)}}
+          onChangeText={(text) => {setEmail(text)}}
         />
       </View>
       <View>
         <TextInput 
           style={styles.input} 
           placeholder="Phone" 
-          onChangeText={(text) => {setIC(text)}}
+          onChangeText={(text) => {setPhone(text)}}
         />
       </View>
       <View>

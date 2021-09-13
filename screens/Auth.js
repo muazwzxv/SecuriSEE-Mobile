@@ -7,7 +7,7 @@ import {Loading} from '../components/Index';
 import Login from './LoginScreen';
 import Registration from './RegisterScreeen';
 
-export default function MainScreen({ navigation }) {
+export default function Auth({ navigation }) {
 
     const [showLogin, setShowLogin] = useState(false);
 

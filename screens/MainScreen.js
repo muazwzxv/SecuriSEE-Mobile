@@ -1,28 +1,59 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Button, BackHandler } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //import components
-import {Loading} from '../components/Index';
+import deviceStorage from '../services/deviceStorage';
+import Loading from '../components/Loading';
 import Auth from './Auth';
 import Registration from './RegisterScreeen';
+import Login from './LoginScreen';
 import Home from './user/HomeScreen';
-
 
 
 export default function MainScreen({ navigation }) {
 
   const [jwt,setJwt] = useState('');
+  const [loading,setLoading] = useState(true);
 
-  //set a new jwt
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('id_token');
+
+      if(value !== null) {
+        setJwt(value);
+        setLoading(false);
+      }else {
+        setLoading(false);
+      }
+    }catch (err) {
+      alert(err);
+    }
+  }
+
   const newJWT = (JWT) => {
     setJwt(JWT);
   }
 
-  if(jwt === '') {
-    return(<Registration newJWT={newJWT}/>);
-  } else {
-    return(<Home />);
+  const loadHandler = () => {
+    setLoading(true);
+  }
+
+  const logout = () => {
+    deviceStorage.delJwt()
+    setJwt('');
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getData();
+  },[]);
+ 
+  if(!jwt) {
+    return(<Login newJWT={newJWT} loadHandler={loadHandler}/>);
+  } else if(jwt){
+    return(<Home logout={logout}/>);
   }
 }
 

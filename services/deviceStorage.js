@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 
 const deviceStorage = {
   
@@ -6,10 +7,33 @@ const deviceStorage = {
       try {
         await AsyncStorage.setItem(key, value);
       } catch (error) {
-        console.log('AsyncStorage Error: ' + error.message);
+        alert('AsyncStorage Error: ' + error.message);
+      }
+    },
+    
+    async loadJWT() {
+      const [temp,setTemp] = useState(null);
+      try {
+        const value = await AsyncStorage.getItem('id_token');
+  
+        if(value !== null) {
+          setTemp(value);
+          alert(value);
+        }else {
+          setLoading(false);
+        }
+      }catch (err) {
+        alert(err);
+      }
+    },
+
+    async delJwt() {
+      try {
+        await AsyncStorage.removeItem('id_token');
+      }catch (error) {
+        alert(error);
       }
     }
-    
   };
 
 export default deviceStorage;
