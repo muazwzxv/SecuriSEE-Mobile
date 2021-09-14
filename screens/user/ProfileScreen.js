@@ -4,10 +4,11 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen(props) {
   return (
     <View style={styles.container}>
-      <Text>HistoryScreen</Text>
+      <Text>ProfileScreen</Text>
+      <Button title='Log Out' onPress={props.logout}/>
       <StatusBar style="auto" />
     </View>
   );

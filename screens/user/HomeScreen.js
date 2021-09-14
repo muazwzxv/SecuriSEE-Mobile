@@ -4,7 +4,12 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export default function HomeScreen({ navigation }) {
+//import components
+import deviceStorage from '../../services/deviceStorage';
+
+export default function HomeScreen() {
+
+
   return (
     <View style={styles.container}>
       <Text>HomeScreen</Text>

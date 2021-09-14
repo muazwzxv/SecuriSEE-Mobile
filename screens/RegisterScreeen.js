@@ -1,32 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
-export default function RegisterScreen() {
- 
+//import components 
+import deviceStorage from '../services/deviceStorage';
+
+export default function RegisterScreen(props) {
+  const navigation = useNavigation();
+
   //set the state
-  const [fname,setFname] = useState('');
-  const [lname,setLname] = useState('');
-  const [IC,setIC] = useState(0);
-  const [email,setEmail] = useState('');
-  const [phone,setPhone] = useState(0);
-  const [password,setPassword] = useState('');
+  const [names,setName] = useState('');
+  const [IC,setIC] = useState('');
+  const [emailadd,setEmail] = useState('');
+  const [phone,setPhone] = useState('');
+  const [passwords,setPassword] = useState('');
 
+  //register a user
+  const registerUser = () => {
+    axios({
+      method: 'post',
+      url: 'http://138.3.215.26:80/api/user',
+      data: {
+        name: names,
+        ic: IC,
+        email: emailadd,
+        phone: phone,
+        password: passwords
+      }
+    })
+    .then(() => {
+      Alert.alert('Registration Success','User successfully registered');
+      navigation.navigate('Main');
+    })
+    .catch((err) => {
+      Alert.alert('Registration error',err.response.data.Message);
+    })
+  }
+
+  
   return (
     <View style={styles.container}>
       <Text>Registration Page </Text>
       <View>
         <TextInput 
           style={styles.input} 
-          placeholder="First Name" 
-          onChangeText={(text) => {setIC(text)}}
-        />
-      </View>
-      <View>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Last Name" 
-          onChangeText={(text) => {setIC(text)}}
+          placeholder="Name" 
+          onChangeText={(text) => {setName(text)}}
         />
       </View>
       <View>
@@ -40,14 +61,14 @@ export default function RegisterScreen() {
         <TextInput 
           style={styles.input} 
           placeholder="Email" 
-          onChangeText={(text) => {setIC(text)}}
+          onChangeText={(text) => {setEmail(text)}}
         />
       </View>
       <View>
         <TextInput 
           style={styles.input} 
           placeholder="Phone" 
-          onChangeText={(text) => {setIC(text)}}
+          onChangeText={(text) => {setPhone(text)}}
         />
       </View>
       <View>
@@ -58,7 +79,7 @@ export default function RegisterScreen() {
           onChangeText={(text) => {setPassword(text)}}
         />
       </View>
-      <Button title="Register"></Button>
+      <Button title="Register" onPress={registerUser}/>
       <StatusBar style="auto" />
     </View>
   );

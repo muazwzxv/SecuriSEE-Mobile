@@ -16,7 +16,7 @@ import ProfileScreen from './ProfileScreen';
 //declaring tab navigator
 const Tab = createBottomTabNavigator();
 
-export default function UserContainer() {
+export default function UserContainer(props) {
   return (
     <Tab.Navigator screenOptions={({route}) => ({
         tabBarIcon : ({color, size}) => {
@@ -40,7 +40,7 @@ export default function UserContainer() {
          <Tab.Screen name="Home" component={HomeScreen}/>
          <Tab.Screen name="History" component={HistoryScreen}/>
          <Tab.Screen name="New" component={ReportFormScreen}/>
-         <Tab.Screen name="Profile" component={ProfileScreen}/>
+         <Tab.Screen name="Profile" children={()=><ProfileScreen logout={props.logout}/>}/>
     </Tab.Navigator>
   );
 }
