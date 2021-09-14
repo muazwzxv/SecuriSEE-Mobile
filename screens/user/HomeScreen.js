@@ -7,13 +7,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import components
 import deviceStorage from '../../services/deviceStorage';
 
-export default function HomeScreen(props) {
+export default function HomeScreen() {
 
 
   return (
     <View style={styles.container}>
       <Text>HomeScreen</Text>
-      <Button title='Log Out' onPress={props.logout}/>
       <StatusBar style="auto" />
     </View>
   );

@@ -12,13 +12,13 @@ const deviceStorage = {
     },
     
     async loadJWT() {
-      const [temp,setTemp] = useState(null);
+      const [temp,setTemp] = useState('');
       try {
         const value = await AsyncStorage.getItem('id_token');
   
         if(value !== null) {
           setTemp(value);
-          alert(value);
+          alert(temp);
         }else {
           setLoading(false);
         }

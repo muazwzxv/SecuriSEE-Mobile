@@ -10,7 +10,7 @@ import Auth from './Auth';
 import Registration from './RegisterScreeen';
 import Login from './LoginScreen';
 import Home from './user/HomeScreen';
-
+import Container from './user/UserContainer';
 
 export default function MainScreen({ navigation }) {
 
@@ -30,14 +30,15 @@ export default function MainScreen({ navigation }) {
     }catch (err) {
       alert(err);
     }
-  }
+  };
 
   const newJWT = (JWT) => {
     setJwt(JWT);
+    setLoading(false);
   }
 
-  const loadHandler = () => {
-    setLoading(true);
+  const loadHandler = (bool) => {
+    setLoading(bool);
   }
 
   const logout = () => {
@@ -49,11 +50,13 @@ export default function MainScreen({ navigation }) {
   useEffect(() => {
     getData();
   },[]);
- 
-  if(!jwt) {
+  
+  if(loading) {
+    return(<Loading/>);
+  } else if(!jwt) {
     return(<Login newJWT={newJWT} loadHandler={loadHandler}/>);
   } else if(jwt){
-    return(<Home logout={logout}/>);
+    return(<Container logout={logout}/>);
   }
 }
 
