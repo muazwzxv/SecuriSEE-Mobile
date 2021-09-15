@@ -14,7 +14,7 @@ import HomeScreen from './screens/user/HomeScreen';
 //declaring the stack screen
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+export default function App() { //test
   return (
       <NavigationContainer>
         <Stack.Navigator>
