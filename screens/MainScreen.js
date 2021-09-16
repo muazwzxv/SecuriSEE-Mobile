@@ -54,7 +54,8 @@ export default function MainScreen({ navigation }) {
   if(loading) {
     return(<Loading/>);
   } else if(!jwt) {
-    return(<Login newJWT={newJWT} loadHandler={loadHandler}/>);
+    return(<Container logout={logout}/>);
+    //return(<Login newJWT={newJWT} loadHandler={loadHandler}/>);
   } else if(jwt){
     return(<Container logout={logout}/>);
   }
