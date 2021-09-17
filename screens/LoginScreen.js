@@ -40,7 +40,6 @@ export default function LoginScreen(props) {
     }
   }
 
-
   return (
     <View style={styles.container}>
       
