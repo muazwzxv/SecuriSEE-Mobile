@@ -45,7 +45,6 @@ const data = [
       <TextInput 
          style={styles.searchBox} 
          placeholder="Search Here" 
-         onChangeText={(text) => {setIC(text)}}
       />
 
        {/*List Card*/}
