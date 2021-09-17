@@ -39,7 +39,7 @@ export default function ProfileScreen(props) {
       <Text>Phone Number:</Text>
         <TextInput 
           style={styles.input} 
-          placeholder="abu1234" 
+          placeholder="0197278605" 
           onChangeText={(text) => {setPhone(text)}}
         />
       </View>
@@ -47,7 +47,7 @@ export default function ProfileScreen(props) {
       <Text>Password:</Text>
         <TextInput
           style={styles.input}
-          placeholder="********" 
+          placeholder="abu1234" 
           secureTextEntry={true} 
           onChangeText={(text) => {setPassword(text)}}
         />
