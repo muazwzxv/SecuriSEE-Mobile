@@ -29,7 +29,8 @@ const deviceStorage = {
 
     async delJwt() {
       try {
-        await AsyncStorage.removeItem('id_token');
+        const keys = await AsyncStorage.getAllKeys();
+        await AsyncStorage.multiRemove(keys);
       }catch (error) {
         alert(error);
       }
