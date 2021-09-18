@@ -21,7 +21,7 @@ export default function LoginScreen(props) {
       props.loadHandler(true);
       const data = await axios({
         method: 'post',
-        url: 'http://138.3.215.26:80/api/login',
+        url: 'http://138.3.215.26:80/api/login/user',
         data: {
           ic: IC,
           password: passwords
