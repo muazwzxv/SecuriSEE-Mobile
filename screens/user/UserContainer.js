@@ -40,7 +40,7 @@ export default function UserContainer(props) {
          <Tab.Screen name="Home" component={HomeScreen}/>
          <Tab.Screen name="History" component={HistoryScreen}/>
          <Tab.Screen name="New" component={ReportFormScreen}/>
-         <Tab.Screen name="Profile" children={()=><ProfileScreen logout={props.logout}/>}/>
+         <Tab.Screen name="Profile" children={()=><ProfileScreen jwt={props.jwt} logout={props.logout}/>}/>
     </Tab.Navigator>
   );
 }

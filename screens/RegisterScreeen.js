@@ -112,7 +112,7 @@ export default function RegisterScreen(props) {
 
       <View style={styles.row}>
         <Text style={{color: 'grey'}}>Already have an account? </Text>
-        <Text  onPress={() => {navigation.navigate('Login')}}>Login Here</Text>
+        <Text  onPress={() => {navigation.navigate('Main')}}>Login Here</Text>
       </View>
       </View>
     </View>
