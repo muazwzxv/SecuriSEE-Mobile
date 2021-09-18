@@ -92,26 +92,8 @@ export default function ReportFormScreen({ navigation }) {
       <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', paddingTop: 10}}>Report Form</Text>
       <Text style={{fontSize:15, opacity: .7}}>Witnessed suspicious car? Let us know.</Text>
 
-      <Modal animationType="slide" transparent={true} visible={showModal}>
-        <View style={styles.modal}>
-          <Text>Upload an Image</Text>
-          <View style={styles.submitBtn} >
-            <Button rounded color='#4ed9b8' title="Open Camera" onPress={openCam} ></Button>
-          </View>
-          <View style={styles.submitBtn} >
-            <Button rounded color='#4ed9b8' title="Open Gallery" onPress={openGallery} ></Button>
-          </View>
-          <View style={styles.submitBtn} >
-            <Button rounded color='#4ed9b8' title="Remove Photo" onPress={() => {setImgReady('')}} ></Button>
-          </View>
-          <View style={styles.submitBtn} >
-            <Button rounded color='#4ed9b8' title="Cancel Upload" onPress={() => {setShowModal(false)}} ></Button>
-          </View>
-        </View>
-      </Modal>
-
       <View style={{marginTop: 20}}>
-        <Text>Plate Number</Text>
+        <Text style={{paddingBottom: 5}}>Plate Number</Text>
         <TextInput 
           style={styles.input} 
           placeholder="Enter plate number" 
@@ -119,7 +101,7 @@ export default function ReportFormScreen({ navigation }) {
       </View>
 
       <View style={{marginTop: 10}}>
-        <Text>Address</Text>
+        <Text style={{paddingBottom: 5}}>Address</Text>
         <TextInput 
           style={styles.input} 
           placeholder="Enter address here" 
@@ -127,19 +109,39 @@ export default function ReportFormScreen({ navigation }) {
       </View>
 
       <View style={{marginTop: 10}}>
-        <Text>Description</Text>
+        <Text style={{paddingBottom: 5}}>Description</Text>
         <TextInput 
-          style={styles.input} 
+          style={styles.inpDesc} 
           placeholder="Enter description" 
         />
       </View>
 
-      <View style={{marginTop: 10, paddingRight: 210}}>
-        <Text>Upload Picture</Text>
-        <MaterialCommunityIcons name="upload" style={{color: 'black', fontSize: 60}} onPress={() => {setShowModal(true)}}/>
-        <Text>{imgReady}</Text>
+      <View>
+      <Text style={{paddingBottom: 5,marginTop: 10, paddingRight: 190}}>Upload an Image</Text>
+      <View style={{flexDirection: 'row'}}>
+        <MaterialCommunityIcons name="upload" style={{color: 'black', fontSize: 30}} onPress={() => {setShowModal(true)}}/>
+        <Text style={{padding: 10}}>{imgReady}</Text>
       </View>
-      <View style={styles.loginBtn} >
+      </View>
+
+      <View style={styles.box}>
+        <View style={styles.submitBtn} >
+            <Button rounded color='#697689' title="Open Camera" onPress={openCam} ></Button>
+          </View>
+          <View style={styles.submitBtn} >
+            <Button rounded color='#697689' title="Open Gallery" onPress={openGallery} ></Button>
+          </View>
+      </View>
+
+
+          <View style={styles.submitBtn} >
+            <Button rounded color='#F47373' title="Remove Photo" onPress={() => {setImgReady('')}} ></Button>
+          </View>
+          {/*<View style={styles.submitBtn} >
+            <Button rounded color='#4ed9b8' title="Cancel Upload" onPress={() => {setShowModal(false)}} ></Button>
+      </View>*/}
+
+      <View style={{paddingTop: 60, width: 300}}>
       <Button rounded color='#4ed9b8' title="Submit Report" ></Button>
       </View>
 
@@ -156,11 +158,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  box: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    borderBottomWidth: 2,
+    borderColor: '#fff',
+    justifyContent: 'center',
+    height: 40,
+    width: 100,
+  },
+
   modal: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    marginTop: '130%'
   },
 
   row: {
@@ -175,20 +187,31 @@ const styles = StyleSheet.create({
 
   input: {
     borderColor: 'gray',
-    borderWidth: 2,
+    borderWidth: 1,
     height: 40,
     width: 300,
-    textAlign: 'center',
     borderStyle: 'solid',
+    paddingLeft: 10,
+    borderRadius: 6
+  },
+
+  inpDesc: {
+    borderColor: 'gray',
+    borderWidth: 1,
+    height: 60,
+    width: 300,
+    borderStyle: 'solid',
+    paddingLeft: 10,
     borderRadius: 6
   },
 
   submitBtn: {
     color: '#4ed9b8',
     fontSize: 20,
-    width: 200,
+    width: 150,
     justifyContent: 'center',
-    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   
 });

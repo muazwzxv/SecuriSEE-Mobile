@@ -64,8 +64,8 @@ export default function LoginScreen(props) {
         <Text>Login to access your account</Text>
       </View>
 
-      <View style={{marginTop: 30}}>
-        <Text>Enter IC Number:</Text>
+      <View style={{marginTop: 20}}>
+        <Text style={{paddingBottom: 5}}>Enter IC Number</Text>
         <TextInput 
           style={styles.input} 
           placeholder="IC number" 
@@ -75,7 +75,7 @@ export default function LoginScreen(props) {
       </View>
 
       <View style={{padding: 30}}>
-      <Text>Enter Password:</Text>
+      <Text style={{paddingBottom: 5}}>Enter Password</Text>
         <TextInput
           style={styles.input}
           placeholder="Password" 
@@ -125,9 +125,9 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderColor: 'gray',
-    borderWidth: 2,
-    height: 40,
+    borderColor: 'grey',
+    borderWidth: 1,
+    height: 50,
     width: 300,
     textAlign: 'center',
     borderStyle: 'solid',

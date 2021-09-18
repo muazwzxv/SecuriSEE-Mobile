@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert, ImageBackground, Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -43,45 +43,60 @@ export default function RegisterScreen(props) {
   return (
     <View style={styles.container}>
 
+      {/*Top*/}
+      <ImageBackground
+        source={require('../assets/bglogin.jpg')}
+        style={{
+          height: Dimensions.get('window').height / 4.8, 
+        }}>
+
+        <View style={styles.titleView}>
+          <Text style={styles.title}>Registration</Text>
+        </View>
+      </ImageBackground>
+
+       {/*Bottom*/} 
+      <View style={styles.bottomView}>
+
       <View style={{padding: 20}}>
-        <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', textAlign: 'center'}}>Registration</Text> 
-        <Text>Create a new SecuriSEE account</Text>
+      <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', textAlign: 'center'}}>Let's Get Started</Text> 
+        <Text style={{textAlign: 'center'}}>Create a new SecuriSEE account</Text>
       </View>
 
       <View>
-        <Text>Full Name:</Text>
+        <Text style={{paddingBottom: 5}}>Full Name</Text>
         <TextInput 
           style={styles.input} 
           placeholder="Name" 
           onChangeText={(text) => {setName(text)}}
         />
       </View>
-      <View style={{marginTop: 15}}>
-      <Text>IC Number:</Text>
+      <View>
+        <Text style={{paddingTop: 15, paddingBottom: 5}}>IC Number</Text>
         <TextInput 
           style={styles.input} 
           placeholder="************" 
           onChangeText={(text) => {setIC(text)}}
         />
       </View>
-      <View style={{marginTop: 15}}>
-      <Text>E-mail:</Text>
+      <View>
+      <Text style={{paddingTop: 15,paddingBottom: 5}}>E-mail</Text>
         <TextInput 
           style={styles.input} 
           placeholder="example@mail.com" 
           onChangeText={(text) => {setEmail(text)}}
         />
       </View>
-      <View style={{marginTop: 15}}>
-      <Text>Phone Number:</Text>
+      <View>
+      <Text style={{paddingTop: 15,paddingBottom: 5}}>Phone Number</Text>
         <TextInput 
           style={styles.input} 
           placeholder="01*********" 
           onChangeText={(text) => {setPhone(text)}}
         />
       </View>
-      <View style={{marginTop: 15}}>
-      <Text>Password:</Text>
+      <View>
+      <Text style={{paddingTop: 15,paddingBottom: 5}}>Password</Text>
         <TextInput
           style={styles.input}
           placeholder="Password" 
@@ -96,8 +111,9 @@ export default function RegisterScreen(props) {
       </View>
 
       <View style={styles.row}>
-        <Text style={{color: 'grey'}}>Already has an account? </Text>
+        <Text style={{color: 'grey'}}>Already have an account? </Text>
         <Text  onPress={() => {navigation.navigate('Login')}}>Login Here</Text>
+      </View>
       </View>
     </View>
   );
@@ -107,22 +123,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    //alignItems: 'center',
+    //justifyContent: 'center',
+  },
+
+  
+  bottomView: {
+    flex: 1.5,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    bottom: 50,
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
+    //justifyContent: 'center',
   },
 
   row: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: 'space-between',
+    paddingTop: 2,
   },
 
   input: {
     borderColor: 'gray',
-    borderWidth: 2,
+    borderWidth: 1,
     height: 40,
     width: 300,
-    textAlign: 'center',
+    paddingLeft: 10,
     borderStyle: 'solid',
     borderRadius: 6
   },
@@ -131,6 +159,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 60,
     fontWeight: 'bold',
+    textAlign: 'center',
+    paddingTop: 30,
   },
 
   regBtn: {
@@ -138,6 +168,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 400,
     justifyContent: 'center',
-    padding: 40,
+    paddingTop: 40,
+    paddingLeft: 40,
+    paddingRight: 40,
+    paddingBottom: 20
   }
 });
