@@ -1,9 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Modal, TouchableOpacity, TextInput, ImageBackground, Dimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 export default function ProfileScreen(props) {
+
+  //all the states
+  const [name,setName] = useState('');
+  const [IC,setIC] = useState('');
+  const [email,setEmail] = useState('');
+  const [phone,setPhone] = useState('');
+  const [passw,setPassword] = useState('');
+
+  //run when render call the api
+  const getUser = async () => {
+    try {
+      const data = await axios.get('http://138.3.215.26:80/api/me', {
+        headers: {
+          'Authorization': `Bearer ${props.jwt}`
+        }
+      }).then((res) => {
+        setName(res.data.User.name);
+        setIC(res.data.User.ic);
+        setEmail(res.data.User.email);
+        setPhone(res.data.User.phone);
+      })
+
+    }catch(err) {
+      alert(err);
+    }
+  }
+
+  //run the function
+  useEffect(() => {
+    getUser();
+  },[]);
 
   return (
     <View style={styles.container}>
@@ -30,6 +62,7 @@ export default function ProfileScreen(props) {
         <MaterialCommunityIcons name="account" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
+            value={name}
             placeholder="Abu bin Hassan"
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -40,6 +73,7 @@ export default function ProfileScreen(props) {
         <MaterialCommunityIcons name="identifier" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
+            value={IC}
             placeholder="861230012345"
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -50,6 +84,7 @@ export default function ProfileScreen(props) {
         <MaterialCommunityIcons name="email" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
+            value={email}
             placeholder="abuhassan@gmail.com"
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -60,6 +95,7 @@ export default function ProfileScreen(props) {
         <MaterialCommunityIcons name="phone" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
+            value={phone}
             placeholder="0197278605"
             placeholderTextColor="#666666"
             autoCorrect={false}
@@ -70,7 +106,7 @@ export default function ProfileScreen(props) {
         <MaterialCommunityIcons name="onepassword" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
-            placeholder="abu1234"
+            placeholder="Enter new password here"
             placeholderTextColor="#666666"
             autoCorrect={false}
             onChangeText={(text) => {setPassword(text)}}
