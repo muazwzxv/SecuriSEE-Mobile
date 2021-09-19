@@ -25,7 +25,7 @@ export default function UserContainer(props) {
             if(route.name === 'Home') {
                 iconName = 'home';
             } else if(route.name === 'History') {
-                iconName = 'magnify';
+                iconName = 'history';
             } else if(route.name === 'New') {
                 iconName = 'plus-box';
             } else if(route.name === 'Profile') {
