@@ -13,30 +13,13 @@ export default function ProfileScreen(props) {
   const [phone,setPhone] = useState('');
   const [passw,setPassword] = useState('');
 
-  //run when render call the api
-  const getUser = async () => {
-    try {
-      const data = await axios.get('http://138.3.215.26:80/api/me', {
-        headers: {
-          'Authorization': `Bearer ${props.jwt}`
-        }
-      }).then((res) => {
-        setName(res.data.User.name);
-        setIC(res.data.User.ic);
-        setEmail(res.data.User.email);
-        setPhone(res.data.User.phone);
-      })
-
-    }catch(err) {
-      alert(err);
-    }
-  }
-
-  //run the function
   useEffect(() => {
-    getUser();
-  },[]);
-
+    setName(props.userData.name);
+    setIC(props.userData.ic);
+    setEmail(props.userData.email);
+    setPhone(props.userData.phone);
+  });
+  
   return (
     <View style={styles.container}>
 
@@ -47,10 +30,10 @@ export default function ProfileScreen(props) {
           height: Dimensions.get('window').height / 4, 
         }}>
 
-      <View style={{alignItems: 'center'}}>
-        <MaterialCommunityIcons name="face" style={{color: '#fff', fontSize: 85, paddingTop: 20}}/>
-        <Text style={{color:'#fff', fontSize: 30, fontWeight: 'bold', textAlign: 'center', paddingBottom: 30}}>User Profile</Text> 
-      </View>
+        <View style={{alignItems: 'center'}}>
+          <MaterialCommunityIcons name="face" style={{color: '#fff', fontSize: 85, paddingTop: 20}}/>
+          <Text style={{color:'#fff', fontSize: 30, fontWeight: 'bold', textAlign: 'center', paddingBottom: 30}}>User Profile</Text> 
+        </View>
       </ImageBackground>
     
 
@@ -115,12 +98,10 @@ export default function ProfileScreen(props) {
 
       <View style={styles.btn} >
       <Button rounded color='#4ed9b8' title="Save Changes"></Button>
-      <StatusBar style='auto'/>
       </View>
 
       <View style={{paddingTop: 10}}>
         <Button title='Log Out' onPress={props.logout}></Button>
-        <StatusBar style='auto'/>
       </View>
       </View>
      </View>
