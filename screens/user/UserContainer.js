@@ -36,10 +36,11 @@ export default function UserContainer(props) {
         },
         tabBarActiveTintColor:'black',
         tabBarInactiveTintColor:'gray',
+        headerShown: false
     })}>
          <Tab.Screen name="Home" component={HomeScreen}/>
          <Tab.Screen name="History" component={HistoryScreen}/>
-         <Tab.Screen name="New" component={ReportFormScreen}/>
+         <Tab.Screen name="New" children={()=><ReportFormScreen jwt={props.jwt}/>}/>
          <Tab.Screen name="Profile" children={()=><ProfileScreen jwt={props.jwt} logout={props.logout}/>}/>
     </Tab.Navigator>
   );

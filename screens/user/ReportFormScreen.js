@@ -1,21 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, Image, Modal } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, Image, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as Location from 'expo-location';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import axios from 'axios';
 
 
-export default function ReportFormScreen({ navigation }) {
+export default function ReportFormScreen(props) {
   
   //state for the location and permission error
-  const [location,setLocation] = useState(null);
+  const [lat,setLat] = useState(0);
+  const [lng,setLng] = useState(0);
   const [errmsg,setErrmsg] =  useState(null);
   const [photo,setPhoto] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [imgReady,setImgReady] = useState('');
+  const [desc,setDesc] = useState('');
 
   //run location permission when the page rendered
   useEffect(() => {
@@ -28,7 +32,8 @@ export default function ReportFormScreen({ navigation }) {
       }
 
       let location = await Location.getLastKnownPositionAsync({accuracy: 6, maxAge: 1000});
-      setLocation(location);
+      setLat(location.coords.latitude);
+      setLng(location.coords.longitude);
     })();
   },[]);
 
@@ -47,15 +52,20 @@ export default function ReportFormScreen({ navigation }) {
     let image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
       base64: true,
       exif: true,
     });
 
     if(!image.cancelled) {
-      setPhoto(image.uri);
-      setImgReady('Image ready!');
+      try {
+        const file = await ImageManipulator.manipulateAsync(image.uri, [], { compress: 0.4 });
+        setPhoto(file.uri);
+        setImgReady('Image ready!');
+
+      }catch(err) {
+        alert(err)
+      }
     }
   }
 
@@ -64,22 +74,73 @@ export default function ReportFormScreen({ navigation }) {
     let image = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4,3],
       quality: 1,
       base64: true,
       exif: true,
     });
 
     if(!image.cancelled) {
-      setPhoto(image.uri);
-      setImgReady('Image ready!');
+      try {
+        const file = await ImageManipulator.manipulateAsync(image.uri, [], { compress: 0.4 });
+        setPhoto(file.uri);
+        setImgReady('Image ready!');
+
+      }catch(err) {
+        alert(err)
+      }
     }
   }
 
   //remove the image
   const removeImg = () => {
     setPhoto(null);
-    setImgReady('ddd');
+    setImgReady('');
+  }
+
+  //send the report
+  const postReport = async () => {
+    try {
+      const datas = await axios.post('http://138.3.215.26:80/api/report',
+        {
+          description: desc,
+          lat: lat,
+          lng: lng,
+        },
+        {
+        headers: {
+          'Authorization': `Bearer ${props.jwt}`
+        },
+      }).then((response) => {
+        postImage(response.data.Report.id);
+      });
+
+    }catch(err) {
+      alert(err);
+    }
+  }
+
+  //send the image
+  const postImage = async (reportID) => {
+    try {
+      const param = new FormData();
+      param.append('image', {
+        uri: photo,
+        type: 'image/jpeg',
+        name: reportID+'.jpg'
+      });
+
+      const datas = await axios.post(`http://138.3.215.26:80/api/image/upload/${reportID}`,param,{
+        headers: {
+          'Authorization': `Bearer ${props.jwt}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((response) => {
+        Alert.alert('Success',response.data.Message);
+      });
+    }catch(err) {
+      alert(err);
+    }
   }
 
   return (
@@ -92,27 +153,12 @@ export default function ReportFormScreen({ navigation }) {
       <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', paddingTop: 10}}>Report Form</Text>
       <Text style={{fontSize:15, opacity: .7}}>Witnessed suspicious car? Let us know.</Text>
 
-      <View style={{marginTop: 20}}>
-        <Text style={{paddingBottom: 5}}>Plate Number</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Enter plate number" 
-        />
-      </View>
-
-      <View style={{marginTop: 10}}>
-        <Text style={{paddingBottom: 5}}>Address</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Enter address here" 
-        />
-      </View>
-
       <View style={{marginTop: 10}}>
         <Text style={{paddingBottom: 5}}>Description</Text>
         <TextInput 
           style={styles.inpDesc} 
-          placeholder="Enter description" 
+          placeholder="Enter description"
+          onChangeText={(text) => {setDesc(text)}} 
         />
       </View>
 
@@ -135,17 +181,17 @@ export default function ReportFormScreen({ navigation }) {
 
 
           <View style={styles.submitBtn} >
-            <Button rounded color='#F47373' title="Remove Photo" onPress={() => {setImgReady('')}} ></Button>
+            <Button rounded color='#F47373' title="Remove Photo" onPress={removeImg} ></Button>
           </View>
           {/*<View style={styles.submitBtn} >
             <Button rounded color='#4ed9b8' title="Cancel Upload" onPress={() => {setShowModal(false)}} ></Button>
       </View>*/}
 
       <View style={{paddingTop: 60, width: 300}}>
-      <Button rounded color='#4ed9b8' title="Submit Report" ></Button>
+      <Button rounded color='#4ed9b8' title="Submit Report" onPress={postReport}/>
       </View>
 
-      <Text>{JSON.stringify(location)}</Text>
+      <Text>{lat}</Text>
       <StatusBar style="auto" />
     </View>
   );
