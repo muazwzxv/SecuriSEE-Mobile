@@ -31,7 +31,7 @@ export default function ReportFormScreen(props) {
         return;
       }
 
-      let location = await Location.getLastKnownPositionAsync({accuracy: 6, maxAge: 1000});
+      let location = await Location.getLastKnownPositionAsync({accuracy: 6});
       setLat(location.coords.latitude);
       setLng(location.coords.longitude);
     })();

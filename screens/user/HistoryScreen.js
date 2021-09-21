@@ -6,13 +6,24 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as Location from 'expo-location';
+import Geocoder from 'react-native-geocoder';
 
 
 export default function HistoryScreen(props) {
 
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
   const navigation = useNavigation();
   const [data, setReportData] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [temp,setTemp] = useState(null);
+  const [addr,setAddr] = useState([
+    {
+      streetname: null
+    },
+  ]);
   const [geo,setGeo] = useState(null); 
 
   //get the report data
@@ -22,9 +33,25 @@ export default function HistoryScreen(props) {
         headers: {
           'Authorization' : `Bearer ${props.jwt}`
         }
-      }).then((response) => {
+      }).then(async (response) => {
         console.log('executed!!')
         setReportData(response.data.reports);
+        // var foo  = response.data.reports;
+        // var i;
+        // for(i=0;i<foo.length;i++) {
+
+        //   let address = await Location.reverseGeocodeAsync(
+        //     { latitude: foo[i].lat, 
+        //       longitude: foo[i].lng}
+        //     ).then((res) => {
+        //       if(addr.streetname === null) {
+        //         setAddr([{streetname:res[0].street}])
+        //       }else {
+        //         setAddr(prevState => [...prevState,{streetname:res[0].street}]);
+        //       }
+        //     })
+        // }
+        // console.log(JSON.stringify(addr));
         setRefresh(false);
       })
     }catch(err) {
@@ -35,22 +62,24 @@ export default function HistoryScreen(props) {
 
   //refresh function
   const testRefresh = () => {
+    setAddr([
+      {
+        streetname: ''
+      },
+    ]);
     setRefresh(true);
     getReport();
   }
 
-  //get geoLocation
-  // const geoConvert = async (data) => {
-  //   try {
-  //     for()
-  //     const {lat,lng} = data;
-  //     const geo = await Location.reverseGeocodeAsync({lat,lng});
-
-  //     alert('run');
-  //     return `${geo.name}`
-  //   }catch(err) {
-  //     alert(err);
-  //   }
+  // const geoLocate = (data) => {
+  //   let address = Location.reverseGeocodeAsync(
+  //     { latitude: data.lat, 
+  //       longitude: data.lng}
+  //     ).then((res) => {
+  //       setTemp(`Nearby ${res[0].name}, ${res[0].street},${res[0].postalCode} ${res[0].city}, ${res[0].region}`)
+  //     })
+  //     console.log('run!!');
+  //     return temp;
   // }
 
   //run on render
@@ -60,7 +89,7 @@ export default function HistoryScreen(props) {
     }
   });
 
-
+  const keyExtractor = (item) => item.id;
   return (
     <View style={styles.container}>
 
@@ -85,9 +114,10 @@ export default function HistoryScreen(props) {
         <FlatList
           data={data}
           extraData={data}
-          keyExtractor={item => item.id}
+          keyExtractor={keyExtractor}
           onRefresh={testRefresh}
           refreshing={refresh}
+          removeClippedSubviews={true}
           renderItem={({ item }) => (
             <TouchableOpacity>
               <View style={styles.listItem}>
