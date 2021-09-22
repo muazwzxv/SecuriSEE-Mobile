@@ -1,22 +1,95 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Alert, Modal, Pressable, ImageBackground, Dimensions } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { RefreshControl,StyleSheet, Text, View, Button, FlatList, Alert, Modal, Pressable, ImageBackground, Dimensions, Touchable, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import * as Location from 'expo-location';
+import Geocoder from 'react-native-geocoder';
 
-export default function HistoryScreen({ navigation }) {
 
-  //dummy data
-  const data = [
-    { noPlate: 'OM932', dateTime: '1 Sept | 12:00pm', description: 'Last location at XXX' },
-    { noPlate: 'UO039', dateTime: '1 Sept | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'AB000', dateTime: '30 Aug | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'WE111', dateTime: '3 Sept | 12:00pm', description: 'Last location at XXX' },
-    { noPlate: 'UO910', dateTime: '2 Sept | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'OM967', dateTime: '2 Sept | 2:00pm', description: 'Last location at XXX' },
-  ];
+export default function HistoryScreen(props) {
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const navigation = useNavigation();
+  const [data, setReportData] = useState(null);
+  const [refresh, setRefresh] = useState(false);
+  const [temp,setTemp] = useState(null);
+  const [addr,setAddr] = useState([
+    {
+      streetname: null
+    },
+  ]);
+  const [geo,setGeo] = useState(null); 
+
+  //get the report data
+  const getReport = async () => {
+    try {
+      const dat = await axios.get(`http://138.3.215.26:80/api/user/${props.userData.id}/reports`,{
+        headers: {
+          'Authorization' : `Bearer ${props.jwt}`
+        }
+      }).then(async (response) => {
+        console.log('executed!!')
+        setReportData(response.data.reports);
+        // var foo  = response.data.reports;
+        // var i;
+        // for(i=0;i<foo.length;i++) {
+
+        //   let address = await Location.reverseGeocodeAsync(
+        //     { latitude: foo[i].lat, 
+        //       longitude: foo[i].lng}
+        //     ).then((res) => {
+        //       if(addr.streetname === null) {
+        //         setAddr([{streetname:res[0].street}])
+        //       }else {
+        //         setAddr(prevState => [...prevState,{streetname:res[0].street}]);
+        //       }
+        //     })
+        // }
+        // console.log(JSON.stringify(addr));
+        setRefresh(false);
+      })
+    }catch(err) {
+      alert(err);
+      
+    }
+  }
+
+  //refresh function
+  const testRefresh = () => {
+    setAddr([
+      {
+        streetname: ''
+      },
+    ]);
+    setRefresh(true);
+    getReport();
+  }
+
+  // const geoLocate = (data) => {
+  //   let address = Location.reverseGeocodeAsync(
+  //     { latitude: data.lat, 
+  //       longitude: data.lng}
+  //     ).then((res) => {
+  //       setTemp(`Nearby ${res[0].name}, ${res[0].street},${res[0].postalCode} ${res[0].city}, ${res[0].region}`)
+  //     })
+  //     console.log('run!!');
+  //     return temp;
+  // }
+
+  //run on render
+  useEffect(() => {
+    if(!data) {
+      getReport();
+    }
+  });
+
+  const keyExtractor = (item) => item.id;
   return (
     <View style={styles.container}>
 
@@ -36,51 +109,29 @@ export default function HistoryScreen({ navigation }) {
       {/*Bottom*/} 
       <View style={styles.bottomView}>
       <Text style={{color: 'grey', paddingBottom: 10, textAlign: 'center'}}>View your previous reports here</Text>
-      <StatusBar style="auto" />
+      <Text style={{color: 'grey', paddingBottom: 10, textAlign: 'center'}}>Pull to refresh</Text>
 
-      {/*Modal*/} 
-      <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Report has been deleted.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Do you want to delete this report?</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Delete Report</Text>
-            </Pressable>
-          </View>
+        <FlatList
+          data={data}
+          extraData={data}
+          keyExtractor={keyExtractor}
+          onRefresh={testRefresh}
+          refreshing={refresh}
+          removeClippedSubviews={true}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <View style={styles.listItem}>
+                <Text>(GAMBAR)</Text>
+                <Text style={{fontSize:10, opacity: .7}}>{item.id}</Text>
+                <Text style={{fontSize:10, opacity: .7}}>{item.created_at}</Text>
+                <Text style={{fontSize:10, opacity: .7}}>{item.lat}</Text>
+                <Text style={{fontSize:10, opacity: .7}}>{item.lng}</Text>
+                <Text style={{fontSize:14, opacity: .8, paddingTop: 10}}>{item.description}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
         </View>
-      </Modal>
-    </View>
-    <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
-      >
-      <FlatList
-        data={data}
-        keyExtractor={item => item.noPlate}
-        renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Text>(GAMBAR)</Text>
-            <Text style={{fontSize: 20, fontWeight: 'bold', paddingTop: 10}}>{item.noPlate}</Text>
-            <Text style={{fontSize:10, opacity: .7}}>{item.dateTime}</Text>
-            <Text style={{fontSize:14, opacity: .8, paddingTop: 10}}>{item.description}</Text>
-          </View>
-          
-        )}
-      />
-      </Pressable>
-      </View>
       </View>
   );
 }

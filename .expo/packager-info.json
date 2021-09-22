@@ -4,7 +4,7 @@
   "packagerPort": 19000,
   "webpackServerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://xw-v9k.anonymous.oracle-hackathon-mobile.exp.direct",
+  "packagerNgrokUrl": "https://packager.xw-v9k.anonymous.oracle-hackathon-mobile.exp.direct",
+  "ngrokPid": 33319
 }

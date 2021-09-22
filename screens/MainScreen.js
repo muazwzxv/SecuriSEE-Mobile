@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //import components
 import deviceStorage from '../services/deviceStorage';
 import Loading from '../components/Loading';
-import Auth from './Auth';
 import Registration from './RegisterScreeen';
 import Login from './LoginScreen';
 import Home from './user/HomeScreen';
