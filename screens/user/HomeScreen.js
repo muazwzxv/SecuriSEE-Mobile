@@ -60,8 +60,7 @@ const data = [
           </View>
         )}
       />
-
-    </View>
+      </View>
   );
 }
 
@@ -91,14 +90,6 @@ const styles = StyleSheet.create({
   },
 
   listItem: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     borderWidth: 1,
     borderColor: '#333',
     padding: 20,

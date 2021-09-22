@@ -97,11 +97,11 @@ export default function HistoryScreen(props) {
       <ImageBackground
         source={require('../../assets/bglogin.jpg')}
         style={{
-          height: Dimensions.get('window').height / 4, 
+          height: Dimensions.get('window').height / 3.4, 
         }}>
 
       <View style={{alignItems: 'center'}}>
-        <MaterialCommunityIcons name="history" style={{color: '#fff', fontSize: 85, paddingTop: 20}}/>
+        <MaterialCommunityIcons name="history" style={{color: '#fff', fontSize: 85, paddingTop: 40}}/>
         <Text style={{color:'#fff', fontSize: 30, fontWeight: 'bold', textAlign: 'center', paddingBottom: 30}}>Report History</Text> 
       </View>
       </ImageBackground>
@@ -122,11 +122,14 @@ export default function HistoryScreen(props) {
             <TouchableOpacity>
               <View style={styles.listItem}>
                 <Text>(GAMBAR)</Text>
-                <Text style={{fontSize:10, opacity: .7}}>{item.id}</Text>
-                <Text style={{fontSize:10, opacity: .7}}>{item.created_at}</Text>
-                <Text style={{fontSize:10, opacity: .7}}>{item.lat}</Text>
-                <Text style={{fontSize:10, opacity: .7}}>{item.lng}</Text>
-                <Text style={{fontSize:14, opacity: .8, paddingTop: 10}}>{item.description}</Text>
+                {/*<Text style={{fontSize:10, opacity: .7}}>{item.id}</Text>
+                */}
+
+                <Text style={{fontSize:13, opacity: .7, fontWeight: 'bold', paddingTop: 10}}>Created at:</Text>
+                <Text style={{fontSize:10, opacity: .7, paddingTop: 6}}>{item.created_at}</Text>
+                <Text style={{fontSize:13, opacity: .7, paddingTop: 10}}>{item.lat}</Text>
+                <Text style={{fontSize:13, opacity: .7}}>{item.lng}</Text>
+                <Text style={{fontSize:16, opacity: .8, paddingTop: 2}}>{item.description}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -164,14 +167,6 @@ const styles = StyleSheet.create({
   },
 
   listItem: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     borderWidth: 1,
     borderColor: '#333',
     padding: 20,
