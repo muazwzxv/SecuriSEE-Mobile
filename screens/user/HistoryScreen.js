@@ -19,6 +19,7 @@ export default function HistoryScreen(props) {
   const [report, setReportData] = useState(null);
   const [refresh, setRefresh] = useState(false);
 
+
   //get the report data
   const getReport = async () => {
     try {
@@ -27,6 +28,7 @@ export default function HistoryScreen(props) {
           'Authorization' : `Bearer ${props.jwt}`
         }
       }).then(async (response) => {
+        console.log('executed!!')
         setReportData(response.data.data);
         
       })
@@ -41,11 +43,19 @@ export default function HistoryScreen(props) {
   }
 
   const testRefresh = () => {
+    console.log('hooked!');
     setRefresh(true);
     getReport();
     waits(3000).then(()=>setRefresh(false));
   }
 
+
+  //on render
+  useEffect(() => {
+    if(!report) {
+      getReport();
+    }
+  });
 
   const keyExtractor = (item) => item.id;
   return (
@@ -85,7 +95,7 @@ export default function HistoryScreen(props) {
 
                 <Text style={{fontSize:13, opacity: .7, fontWeight: 'bold', paddingTop: 10}}>Created at:</Text>
                 <Text style={{fontSize:10, opacity: .7, paddingTop: 6}}>{moment(item.created_at).format('d MMM | h:mm a')}</Text>
-                <Text onPress={()=>{Linking.openURL(`google.maps:q=${item.lat}+${item.lng}`)}} style={{fontSize:13, opacity: .7, paddingTop: 10,color: 'blue'}}>Location</Text>
+                <Text onPress={()=>{Linking.openURL(`geo:0,0?q=${item.lat}+${item.lng}(LastSeen)`)}} style={{fontSize:13, opacity: .7, paddingTop: 10,color: 'blue'}}>Location</Text>
                 <Text style={{fontSize:16, opacity: .8, paddingTop: 2}}>{item.description}</Text>
               </View>
             </TouchableOpacity>
