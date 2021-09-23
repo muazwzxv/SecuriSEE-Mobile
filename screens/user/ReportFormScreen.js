@@ -145,15 +145,16 @@ export default function ReportFormScreen(props) {
 
   return (
     <View style={styles.container}>
+      <View style={{paddingTop:40}}/>
       <Image
         style={styles.tinyLogo}
         source={require('../../assets/police.jpg')}
       />
 
-      <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', paddingTop: 10}}>Report Form</Text>
+      <Text style={{color:'#4ed9b8', fontSize: 30, fontWeight: 'bold', paddingTop: 40}}>Report Form</Text>
       <Text style={{fontSize:15, opacity: .7}}>Witnessed suspicious car? Let us know.</Text>
 
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: 30}}>
         <Text style={{paddingBottom: 5}}>Description</Text>
         <TextInput 
           style={styles.inpDesc} 
@@ -163,7 +164,7 @@ export default function ReportFormScreen(props) {
       </View>
 
       <View>
-      <Text style={{paddingBottom: 5,marginTop: 10, paddingRight: 190}}>Upload an Image</Text>
+      <Text style={{paddingBottom: 5,marginTop: 20, paddingRight: 190}}>Upload an Image</Text>
       <View style={{flexDirection: 'row'}}>
         <MaterialCommunityIcons name="upload" style={{color: 'black', fontSize: 30}} onPress={() => {setShowModal(true)}}/>
         <Text style={{padding: 10}}>{imgReady}</Text>
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
 
   box: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
     borderBottomWidth: 2,
     borderColor: '#fff',
@@ -227,8 +228,8 @@ const styles = StyleSheet.create({
   },
 
   tinyLogo: {
-    width: 150,
-    height: 80,
+    width: 250,
+    height: 150,
   },
 
   input: {

@@ -27,11 +27,11 @@ export default function ProfileScreen(props) {
        <ImageBackground
         source={require('../../assets/bglogin.jpg')}
         style={{
-          height: Dimensions.get('window').height / 4, 
+          height: Dimensions.get('window').height / 3.5, 
         }}>
 
         <View style={{alignItems: 'center'}}>
-          <MaterialCommunityIcons name="face" style={{color: '#fff', fontSize: 85, paddingTop: 20}}/>
+          <MaterialCommunityIcons name="face" style={{color: '#fff', fontSize: 85, paddingTop: 40}}/>
           <Text style={{color:'#fff', fontSize: 30, fontWeight: 'bold', textAlign: 'center', paddingBottom: 30}}>User Profile</Text> 
         </View>
       </ImageBackground>
@@ -40,13 +40,12 @@ export default function ProfileScreen(props) {
       {/*Bottom*/} 
       <View style={styles.bottomView}>
       <Text style={{color: 'grey', paddingBottom: 30}}>Update your profile here</Text>
-
+      
       <View style={styles.box}>
         <MaterialCommunityIcons name="account" style={{fontSize: 20, paddingTop: 10}}/>
         <TextInput
             style={styles.textInput}
             value={name}
-            placeholder="Abu bin Hassan"
             placeholderTextColor="#666666"
             autoCorrect={false}
             onChangeText={(text) => {setName(text)}}
@@ -57,7 +56,6 @@ export default function ProfileScreen(props) {
         <TextInput
             style={styles.textInput}
             value={IC}
-            placeholder="861230012345"
             placeholderTextColor="#666666"
             autoCorrect={false}
             onChangeText={(text) => {setIC(text)}}
@@ -68,7 +66,6 @@ export default function ProfileScreen(props) {
         <TextInput
             style={styles.textInput}
             value={email}
-            placeholder="abuhassan@gmail.com"
             placeholderTextColor="#666666"
             autoCorrect={false}
             onChangeText={(text) => {setEmail(text)}}
@@ -79,7 +76,6 @@ export default function ProfileScreen(props) {
         <TextInput
             style={styles.textInput}
             value={phone}
-            placeholder="0197278605"
             placeholderTextColor="#666666"
             autoCorrect={false}
             onChangeText={(text) => {setPhone(text)}}
