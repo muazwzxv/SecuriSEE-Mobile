@@ -18,9 +18,6 @@ export default function HistoryScreen(props) {
   const navigation = useNavigation();
   const [report, setReportData] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const [temp,setTemp] = useState(null);
-  const [addr,setAddr] = useState([]);
-  const [geo,setGeo] = useState(null); 
 
   //get the report data
   const getReport = async () => {
