@@ -112,7 +112,7 @@ export default function ReportFormScreen(props) {
           'Authorization': `Bearer ${props.jwt}`
         },
       }).then((response) => {
-        postImage(response.data.Report.id);
+        postImage(response.data.data.id);
       });
 
     }catch(err) {

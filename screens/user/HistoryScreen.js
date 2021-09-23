@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { RefreshControl,StyleSheet, Text, View, Button, FlatList, Alert, Modal, Pressable, ImageBackground, Dimensions, Touchable, TouchableOpacity } from 'react-native';
+import { RefreshControl,StyleSheet, Text, View, Button, FlatList, Alert, Modal, Pressable, ImageBackground, Dimensions, Touchable, TouchableOpacity, Linking } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as Location from 'expo-location';
-import Geocoder from 'react-native-geocoder';
+import moment from 'moment';
 
 
 export default function HistoryScreen(props) {
@@ -16,14 +16,10 @@ export default function HistoryScreen(props) {
   }
 
   const navigation = useNavigation();
-  const [data, setReportData] = useState(null);
+  const [report, setReportData] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [temp,setTemp] = useState(null);
-  const [addr,setAddr] = useState([
-    {
-      streetname: null
-    },
-  ]);
+  const [addr,setAddr] = useState([]);
   const [geo,setGeo] = useState(null); 
 
   //get the report data
@@ -34,60 +30,25 @@ export default function HistoryScreen(props) {
           'Authorization' : `Bearer ${props.jwt}`
         }
       }).then(async (response) => {
-        console.log('executed!!')
-        setReportData(response.data.reports);
-        // var foo  = response.data.reports;
-        // var i;
-        // for(i=0;i<foo.length;i++) {
-
-        //   let address = await Location.reverseGeocodeAsync(
-        //     { latitude: foo[i].lat, 
-        //       longitude: foo[i].lng}
-        //     ).then((res) => {
-        //       if(addr.streetname === null) {
-        //         setAddr([{streetname:res[0].street}])
-        //       }else {
-        //         setAddr(prevState => [...prevState,{streetname:res[0].street}]);
-        //       }
-        //     })
-        // }
-        // console.log(JSON.stringify(addr));
-        setRefresh(false);
+        setReportData(response.data.data);
+        
       })
     }catch(err) {
       alert(err);
-      
     }
   }
 
   //refresh function
-  const testRefresh = () => {
-    setAddr([
-      {
-        streetname: ''
-      },
-    ]);
-    setRefresh(true);
-    getReport();
+  const waits = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
-  // const geoLocate = (data) => {
-  //   let address = Location.reverseGeocodeAsync(
-  //     { latitude: data.lat, 
-  //       longitude: data.lng}
-  //     ).then((res) => {
-  //       setTemp(`Nearby ${res[0].name}, ${res[0].street},${res[0].postalCode} ${res[0].city}, ${res[0].region}`)
-  //     })
-  //     console.log('run!!');
-  //     return temp;
-  // }
+  const testRefresh = () => {
+    setRefresh(true);
+    getReport();
+    waits(3000).then(()=>setRefresh(false));
+  }
 
-  //run on render
-  useEffect(() => {
-    if(!data) {
-      getReport();
-    }
-  });
 
   const keyExtractor = (item) => item.id;
   return (
@@ -112,8 +73,8 @@ export default function HistoryScreen(props) {
       <Text style={{color: 'grey', paddingBottom: 10, textAlign: 'center'}}>Pull to refresh</Text>
 
         <FlatList
-          data={data}
-          extraData={data}
+          data={report}
+          extraData={report}
           keyExtractor={keyExtractor}
           onRefresh={testRefresh}
           refreshing={refresh}
@@ -126,9 +87,8 @@ export default function HistoryScreen(props) {
                 */}
 
                 <Text style={{fontSize:13, opacity: .7, fontWeight: 'bold', paddingTop: 10}}>Created at:</Text>
-                <Text style={{fontSize:10, opacity: .7, paddingTop: 6}}>{item.created_at}</Text>
-                <Text style={{fontSize:13, opacity: .7, paddingTop: 10}}>{item.lat}</Text>
-                <Text style={{fontSize:13, opacity: .7}}>{item.lng}</Text>
+                <Text style={{fontSize:10, opacity: .7, paddingTop: 6}}>{moment(item.created_at).format('d MMM | h:mm a')}</Text>
+                <Text onPress={()=>{Linking.openURL(`google.maps:q=${item.lat}+${item.lng}`)}} style={{fontSize:13, opacity: .7, paddingTop: 10,color: 'blue'}}>Location</Text>
                 <Text style={{fontSize:16, opacity: .8, paddingTop: 2}}>{item.description}</Text>
               </View>
             </TouchableOpacity>
