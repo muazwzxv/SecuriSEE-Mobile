@@ -41,7 +41,9 @@ export default function UserContainer(props) {
 
   //run the function
   useEffect(() => {
-    getUser();
+    if(!userData) {
+      getUser();
+    }
   },[]);
 
 

@@ -32,7 +32,7 @@ export default function LoginScreen(props) {
         props.newJWT(response.data.data);
       })
       .catch((err) => {
-        Alert.alert('Login Error', err.response.data.Message);
+        Alert.alert('Login Error', err.response.data.message);
         props.loadHandler(false);
       })
     }catch (e) {

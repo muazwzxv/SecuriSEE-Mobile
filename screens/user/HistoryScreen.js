@@ -5,7 +5,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import * as Location from 'expo-location';
 import moment from 'moment';
 
 
@@ -18,6 +17,8 @@ export default function HistoryScreen(props) {
   const navigation = useNavigation();
   const [report, setReportData] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [isShow,setShow] = useState(false);
+  const [tempData,setTempData] = useState({Image: {id: '00000000-0000-0000-0000-000000000000'}});
 
 
   //get the report data
@@ -27,10 +28,32 @@ export default function HistoryScreen(props) {
         headers: {
           'Authorization' : `Bearer ${props.jwt}`
         }
-      }).then(async (response) => {
+      }).then((response) => {
         console.log('executed!!')
         setReportData(response.data.data);
-        
+        setTempData({Image: {id: 'noImage'}});
+        // var reports = response.data.data;
+        // var rows = [];
+        // reports.map(async (item) => {
+        //   await getImage(item.Image.id)
+        // });
+      })
+    }catch(err) {
+      alert(err);
+    }
+  }
+
+  
+  const getImage = async (imgID) => {
+    try {
+      const dat = await axios.get(`http://138.3.215.26:80/api/image/download/${imgID}`, {
+        headers: {
+          'Authorization' : `Bearer ${props.jwt}`,
+          'Content-Type': 'image/jpg'
+        }
+      }).then((response) => {
+        console.log(response.data)
+        //ImgToBase64.getBase64String(response.data).then((res) => console.log(res));;
       })
     }catch(err) {
       alert(err);
@@ -50,6 +73,7 @@ export default function HistoryScreen(props) {
   }
 
 
+
   //on render
   useEffect(() => {
     if(!report) {
@@ -57,9 +81,40 @@ export default function HistoryScreen(props) {
     }
   });
 
+  const getDetail = (item) => {
+    setTempData(item);
+    setShow(true);
+  }
+
   const keyExtractor = (item) => item.id;
   return (
     <View style={styles.container}>
+      {/* Modal */}
+      <View>
+        <Modal
+          animationType = {"slide"}
+          transparent={true}
+          visible={isShow}
+        >
+          <View style={styles.modalView}>
+            <Text style={{textAlign: 'center', fontSize:20, fontWeight: 'bold', marginBottom: 30}}>Report Details</Text>
+            <Text style={styles.modalTextTitle}>Report ID: {tempData.id}</Text>
+            <Text style={{fontSize: 12, marginBottom: 10}}>{moment(tempData.created_at).format('d MMM | h:mm a')}</Text>
+
+            <Text style={styles.modalTextTitle}>Coordinate:</Text>
+            <Text style={styles.modalText}>Latitude: {tempData.lat}</Text>
+            <Text style={styles.modalText}>Latitude: {tempData.lng}</Text>
+            <Text onPress={()=>{Linking.openURL(`geo:0,0?q=${tempData.lat}+${tempData.lng}(LastSeen)`)}} style={{color: 'blue', marginBottom:10}}>{'View Location\n'}</Text>
+            
+            <Text style={styles.modalTextTitle}>Description:</Text>
+            <Text style={styles.modalText}>{tempData.description+'\n'}</Text>
+
+            <Text style={styles.modalTextTitle}>Evidence:</Text>
+            <Text style={styles.modalText}>{tempData.Image.id+'\n'}</Text>
+            <Button title='close' onPress={()=>setShow(false)}/>
+          </View>
+        </Modal>
+      </View>
 
       {/*Top*/}
       <ImageBackground
@@ -78,7 +133,7 @@ export default function HistoryScreen(props) {
       <View style={styles.bottomView}>
       <Text style={{color: 'grey', paddingBottom: 10, textAlign: 'center'}}>View your previous reports here</Text>
       <Text style={{color: 'grey', paddingBottom: 10, textAlign: 'center'}}>Pull to refresh</Text>
-
+       
         <FlatList
           data={report}
           extraData={report}
@@ -87,16 +142,15 @@ export default function HistoryScreen(props) {
           refreshing={refresh}
           removeClippedSubviews={true}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            
+            <TouchableOpacity onPress={()=>getDetail(item)}>
               <View style={styles.listItem}>
-                <Text>(GAMBAR)</Text>
-                {/*<Text style={{fontSize:10, opacity: .7}}>{item.id}</Text>
-                */}
+                <Text style={{fontWeight:'bold'}}>{'ID: '+item.id}</Text>
 
                 <Text style={{fontSize:13, opacity: .7, fontWeight: 'bold', paddingTop: 10}}>Created at:</Text>
                 <Text style={{fontSize:10, opacity: .7, paddingTop: 6}}>{moment(item.created_at).format('d MMM | h:mm a')}</Text>
-                <Text onPress={()=>{Linking.openURL(`geo:0,0?q=${item.lat}+${item.lng}(LastSeen)`)}} style={{fontSize:13, opacity: .7, paddingTop: 10,color: 'blue'}}>Location</Text>
-                <Text style={{fontSize:16, opacity: .8, paddingTop: 2}}>{item.description}</Text>
+                <Text>Description:</Text>
+                <Text ellipsizeMode='tail' numberOfLines={1} style={{fontSize:16, opacity: .8, paddingTop: 2}}>{item.description}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -144,15 +198,15 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    margin: 20,
+    margin: 10,
+    padding:10,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
+    textAlign: "left",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 3
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -180,7 +234,13 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
+    marginBottom: 5,
+    textAlign: "left"
+  },
+
+  modalTextTitle: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: "left"
+  },
 });
