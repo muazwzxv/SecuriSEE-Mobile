@@ -35,7 +35,7 @@ export default function RegisterScreen(props) {
       navigation.navigate('Main');
     })
     .catch((err) => {
-      Alert.alert('Registration Error',err.response.data.Message);
+      Alert.alert('Registration Error',err.response.data.message);
     })
   }
 
