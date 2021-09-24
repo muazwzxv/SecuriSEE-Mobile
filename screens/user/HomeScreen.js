@@ -1,14 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, ImageBackgroundBase, ImageBackground, Dimensions, FlatList, Modal, useWindowDimensions } from 'react-native';
+import React, { useEffect, useRef, useState} from 'react';
+import { StyleSheet, Text, TextInput, View, Button, ImageBackgroundBase, ImageBackground, Dimensions, FlatList, Modal, useWindowDimensions, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import WebView from 'react-native-webview';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import axios from 'axios';
 import moment from 'moment';
-import WebViewQuillJS from 'react-native-webview-quilljs'
-import QuillEditor, { QuillToolbar } from 'react-native-cn-quill';
-import RenderHTML from 'react-native-render-html';
+import RenderHtml from 'react-native-render-html';
 
 
 
@@ -23,23 +20,6 @@ export default function HomeScreen(props) {
   const [isRefresh,setRefresh] = useState(false);
   const [isShow, setShow] = useState(false);
   const [tempData,setTempData] = useState({description: ''})
-
-  const _editor = React.createRef();
-  //Generating dummy data
-  const data = [
-    { noPlate: 'AB123', dateTime: '16 Sept | 4:30pm', description: 'Last location at XXX' },
-    { noPlate: 'WE635', dateTime: '10 Sept | 2:00pm', description: 'Last location at XXX' },
-    { noPlate: 'UO999', dateTime: '7 Sept | 12:00pm', description: 'Last location at XXX' },
-    { noPlate: 'AB368', dateTime: '6 Sept | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'OM456', dateTime: '6 Sept | 4:30pm', description: 'Last location at XXX' },
-    { noPlate: 'WE450', dateTime: '4 Sept | 2:00pm', description: 'Last location at XXX' },
-    { noPlate: 'WE111', dateTime: '3 Sept | 12:00pm', description: 'Last location at XXX' },
-    { noPlate: 'UO910', dateTime: '2 Sept | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'OM967', dateTime: '2 Sept | 2:00pm', description: 'Last location at XXX' },
-    { noPlate: 'OM932', dateTime: '1 Sept | 12:00pm', description: 'Last location at XXX' },
-    { noPlate: 'UO039', dateTime: '1 Sept | 2:30am', description: 'Last location at XXX' },
-    { noPlate: 'AB000', dateTime: '30 Aug | 2:30am', description: 'Last location at XXX' },
-  ];
 
   const getNews = async () => {
     try {
@@ -81,24 +61,29 @@ export default function HomeScreen(props) {
     }
   });
 
+  const source = {
+    html: tempData.description
+  };
+  
   return (
     <View style={styles.container}>
       
       <View>
         <Modal
-          animationType = {"slide"}
-          transparent={true}
+          presentationStyle={"fullScreen"}
+          animationType = {"fade"}
           visible={isShow}
         >
-          <View style={styles.modalView}>
-            <WebView
-              source={tempData}
-            /> 
-            
-            <Text style={styles.modalTextTitle}>{tempData.description}</Text>
-            <Text style={styles.modalTextTitle}>Evidence:</Text>
-            <Button title='close' onPress={()=>setShow(false)}/>
-          </View>
+          <ScrollView>
+            <View style={styles.modalView}>
+            <Text style={{fontSize: 40, fontWeight: 'bold', color: '#4ed9b8'}}>SecuriSEE News</Text>
+            <View style={{flex: 1, height: 1, backgroundColor: 'grey', opacity:.2, marginBottom: 20}} />
+              <Text style={{fontSize: 30, fontWeight: 'bold'}}>{tempData.headline}</Text>
+              <Text style={{fontSize: 15, marginBottom: 10}}>{moment(tempData.created_at).format('dddd d MMM | h:mm a')}</Text>
+              <RenderHtml ignoredStyles={['50', '50']} contentWidth={width} source={source}/>
+              <Button style={{position: 'absolute',bottom:0, left:0}} title="I'm alert now!" onPress={()=>setShow(false)}/>
+            </View>
+          </ScrollView>
         </Modal>
       </View>
 
@@ -114,12 +99,7 @@ export default function HomeScreen(props) {
       </ImageBackground>
       <StatusBar style="auto" />
 
-      {/*Search Box*/} 
-      <TextInput 
-         style={styles.searchBox} 
-         placeholder="Search Here" 
-      />
-         
+        <Text style={{textAlign:'center'}}>Pull to refresh</Text>
        {/*List Card*/}
       <FlatList
         data={news}
@@ -129,7 +109,6 @@ export default function HomeScreen(props) {
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => getDetail(item)}>
             <View style={styles.listItem}>
-              <RenderHTML contentWidth={width} source={item.description}/>
               <Text style={{fontSize: 20, fontWeight: 'bold', paddingTop: 10}}>{item.headline}</Text>
               <Text style={{fontSize:10, opacity: .7}}>{item.created_at}</Text>
             </View>
@@ -175,29 +154,12 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 
-  searchBox: {
-    borderColor: '#4ed9b8',
-    borderWidth: 1.4,
-    height: 30,
-    width: 100,
-    marginLeft: 250,
-    alignItems: 'center',
-  },
-
   modalView: {
+    flex: 1,
     margin: 10,
     padding:10,
     backgroundColor: "white",
-    borderRadius: 20,
     textAlign: "left",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
   },
 
   button: {
