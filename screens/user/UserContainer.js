@@ -27,11 +27,15 @@ export default function UserContainer(props) {
           'Authorization': `Bearer ${props.jwt}`
         }
       }).then((res) => {
-        setUserData(res.data.User);
+        setUserData(res.data.data);
       })
 
     }catch(err) {
+      errMsg = err.response.data.Message
       alert(err);
+      if(errMsg === 'Unauthorized') {
+        props.newJWT('');
+      }
     }
   }
 

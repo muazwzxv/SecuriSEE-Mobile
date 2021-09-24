@@ -28,8 +28,8 @@ export default function LoginScreen(props) {
         }
       })
       .then((response) => {
-        deviceStorage.saveItem('id_token', response.data.Token);
-        props.newJWT(response.data.Token);
+        deviceStorage.saveItem('id_token', response.data.data);
+        props.newJWT(response.data.data);
       })
       .catch((err) => {
         Alert.alert('Login Error', err.response.data.Message);
