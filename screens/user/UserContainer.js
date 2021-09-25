@@ -31,7 +31,7 @@ export default function UserContainer(props) {
       })
 
     }catch(err) {
-      errMsg = err.response.data.Message
+      var errMsg = err.response.data.Message
       alert(err);
       if(errMsg === 'Unauthorized') {
         props.newJWT('');

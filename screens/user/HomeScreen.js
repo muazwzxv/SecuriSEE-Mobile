@@ -109,8 +109,9 @@ export default function HomeScreen(props) {
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => getDetail(item)}>
             <View style={styles.listItem}>
-              <Text style={{fontSize: 20, fontWeight: 'bold', paddingTop: 10}}>{item.headline}</Text>
-              <Text style={{fontSize:10, opacity: .7}}>{item.created_at}</Text>
+              <Text style={{fontSize: 30, fontWeight: 'bold', color: '#4ed9b8'}}>News</Text>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>{item.headline}</Text>
+              <Text style={{fontSize:10, opacity: .7}}>{moment(item.created_at).format('d MMM | h:mm a')}</Text>
             </View>
           </TouchableOpacity>
         )}
