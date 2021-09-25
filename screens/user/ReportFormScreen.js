@@ -136,7 +136,8 @@ export default function ReportFormScreen(props) {
           'Content-Type': 'multipart/form-data',
         },
       }).then((response) => {
-        Alert.alert('Success',response.data.Message);
+        Alert.alert('Success',response.data.message);
+        setImgReady('');
       });
     }catch(err) {
       alert(err);
@@ -184,15 +185,10 @@ export default function ReportFormScreen(props) {
           <View style={styles.submitBtn} >
             <Button rounded color='#F47373' title="Remove Photo" onPress={removeImg} ></Button>
           </View>
-          {/*<View style={styles.submitBtn} >
-            <Button rounded color='#4ed9b8' title="Cancel Upload" onPress={() => {setShowModal(false)}} ></Button>
-      </View>*/}
 
       <View style={{paddingTop: 60, width: 300}}>
       <Button rounded color='#4ed9b8' title="Submit Report" onPress={postReport}/>
       </View>
-
-      <Text>{lat}</Text>
       <StatusBar style="auto" />
     </View>
   );
